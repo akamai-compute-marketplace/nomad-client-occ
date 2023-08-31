@@ -1,0 +1,34 @@
+---
+- name: importing Hashicorp repo key
+  apt_key: 
+    url: https://apt.releases.hashicorp.com/gpg 
+    state: present 
+
+- name: adding Hashicorp repo 
+  apt_repository: 
+    repo: deb https://apt.releases.hashicorp.com jammy main 
+    filename: nomad
+    state: present
+
+- name: update repos 
+  apt:
+    update_cache: yes 
+
+- name: creating consul data dir
+  file:
+    path: /opt/consul
+    state: directory
+    mode: '0755'
+
+- name: install consul package
+  apt: 
+    name: consul
+    state: present
+
+- name: move systemd service files
+  ansible.builtin.copy: 
+    src: ../files/consul.service
+    dest: /etc/systemd/system/consul.service 
+    owner: root
+    group: root
+    mode: '0664'
