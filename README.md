@@ -1,4 +1,4 @@
-# HashiCorp Nomad One-Click CLUSTER
+# HashiCorp Nomad Client One-Click CLUSTER
 
 HashiCorp Nomad is a simple and flexible container orchestration platform for managing workloads at scale. The Akamai Connected Cloud One-Click Nomad Clients will deploy _3, 5 or 7_ Nomad Clients to an **Existing** Nomad One-Click Cluster. 
 
