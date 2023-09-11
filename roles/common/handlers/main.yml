@@ -7,6 +7,6 @@
     enabled: yes
 
 - name: restart firewalld
-  systemd: 
+  systemd:
     name: firewalld
     state: restarted

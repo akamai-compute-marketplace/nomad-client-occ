@@ -1,83 +1,25 @@
-# HashiCorp Nomad Client One-Click CLUSTER
+# nomad-client-occ_share
 
-HashiCorp Nomad is a simple and flexible container orchestration platform for managing workloads at scale. The Akamai Connected Cloud One-Click Nomad Clients will deploy _3, 5 or 7_ Nomad Clients to an **Existing** Nomad One-Click Cluster. 
+HashiCorp Nomad One-Click Cluster
 
-## Software Included on Nomad Clients 
+!!! DEPLOYMENT INSTRUCTIONS !!!
 
-| Software  | Version   | Description   |
-| :---      | :----     | :---          |
-| Nomad     | 1.5.2     | HashiCorp Container Orchestration |
-| Consul    | 1.16.1    | HashiCorp Service Discovery Mesh |
-| Docker    | latest    | Container Management Service |
-| Java-jdk  | 17.0.1    | Java JDK  |
-| Fail2ban  | 0.11.2    | Provides protection against brute force and authentication attempts |
-| UFW       | 0.36      | Easy-to-use firewall wrapper used to allow HTTP/S and SSH ports |
-| Certbot   | 1.12      | Is used to obtain HTTPS/TLS/SSL certificate for the provided domain |
+Fork this repo and generate a new PAT with at least RO permissions for it. 
 
-**Supported Distributions:**
+Put the PAT here: https://github.com/linode-solutions/nomad-client-occ_share/blob/main/scripts/ss.sh#L13
 
-- Ubuntu 22.04 LTS
+And your Git username here: https://github.com/linode-solutions/nomad-client-occ_share/blob/main/scripts/ss.sh#L14
 
-## Linode Helpers Included
+Next, add ss.sh to the Cloud Manager as a new Stackscript. 
 
-| Name  | Action  |
-| :---  | :---    |
-| Hostname   | Assigns a hostname to the Linode based on domains provided via UDF or uses default rDNS. | The Hostname module accepts a UDF to assign a FQDN and write to the `/etc/hosts` file. If no domain is provided the default `ip.linodeusercontent.com` rDNS will be used. For consistency, DNS and SSL configurations should use the Hostname generated `_domain` var when possible. |
-| Update Packages   | The Update Packages module performs apt update and upgrade actions as root.  |
-| UFW   | Add UFW firewalls to the Linode  | The UFW module will import a `ufw_rules.yml` provided in `roles/$APP/tasks` and enables the service.  |
-| Fail2Ban   | The Fail2Ban module installs, activates and enables the Fail2Ban service.  |
+For the UDF `consul_nomad_autojoin_token` use the token of the same name from the Nomad Server's `/home/$sudo_user/.deployment_secrets` file.
 
-## Use our API
+Part of the intention is to be able to provide an arbitrary token as long as it has baseline ACLs. https://github.com/linode-solutions/nomad-occ_share/blob/main/roles/consul/files/consul-acl-nomad-auto-join.hcl
 
-Customers can choose to the deploy the Nomad Clients through the Linode Marketplace or directly using API. Before using the commands below, you will need to create an [API token](https://www.linode.com/docs/products/tools/linode-api/get-started/#create-an-api-token) or configure [linode-cli](https://www.linode.com/products/cli/) on an environment, and substitute for default values.
+!!! KNOWN ISSUES !!!
 
-SHELL:
-```
-curl -H "Content-Type: application/json" \
--H "Authorization: Bearer $TOKEN" \
--X POST -d '{
-    "authorized_users": [
-        "user1",
-        "user2"
-    ],
-    "backups_enabled": false,
-    "booted": true,
-    "image": "linode/ubuntu22.04",
-    "label": "nomad-client-occ",
-    "private_ip": true,
-    "region": "us-ord",
-    "root_pass": "A_Really_Great_password",
-    "stackscript_data": {
-        "clusterheader": "Yes",
-        "add_ssh_keys": "yes",
-        "cluster_size": "3",
-        "consul_nomad_autojoin_token": "CONSUL_NOMAD_AUTOJOIN_TOKEN",
-        "token_password": "LINODE_API_TOKEN",
-        "sudo_username": "sudo_user"
-    },
-    "stackscript_id": 1226545,
-    "tags": [],
-    "type": "g6-dedicated-4"
-}' https://api.linode.com/v4/linode/instances
-```
-CLI:
-```
-linode-cli linodes create \
-  --authorized_users user1 \
-  --authorized_users user2 \
-  --backups_enabled false \
-  --booted true \
-  --image 'linode/ubuntu22.04' \
-  --label nomad-occ \
-  --private_ip true \
-  --region us-ord \
-  --root_pass A_Really_Great_password \
-  --stackscript_data '{"clusterheader": "Yes","add_ssh_keys":"yes","cluster_size":"3",consul_nomad_autojoin_token": "CONSUL_NOMAD_AUTOJOIN_TOKEN","token_password":"LINODE_API_TOKEN","sudo_username":"user1"}' \
-  --stackscript_id 1226545 \
-  --type g6-dedicated-4
-```
+Manually add the tag `consul-server` to the provisioner Linode. 
 
-## Resources
+Only one server cluster per datacenter. For POC we're just leveraging auto-join with minimal logic, and running a second cluster in the same DC breaks bootstrap.
 
-- [Create Linode via API](https://www.linode.com/docs/api/linode-instances/#linode-create)
-- [Stackscript referece](https://www.linode.com/docs/guides/writing-scripts-for-use-with-linode-stackscripts-a-tutorial/#user-defined-fields-udfs)
+The Linode labeling scheme is currently simple (add integer per node) this means that if you have Linodes already named $INSTANCE_LABEL$EXISTING_INTEGER the deployment fails, falsely registering old Linodes as the new instances.

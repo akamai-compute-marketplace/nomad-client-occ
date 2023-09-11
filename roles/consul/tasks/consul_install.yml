@@ -1,14 +1,15 @@
 ---
-- name: importing Hashicorp repo key
-  apt_key: 
-    url: https://apt.releases.hashicorp.com/gpg 
-    state: present 
+- name: Add HashiCorp GPG key
+  ansible.builtin.get_url:
+    url: https://apt.releases.hashicorp.com/gpg
+    dest: /etc/apt/trusted.gpg.d/hashicorp.gpg.asc
+    mode: '0644'
+    force: true
 
-- name: adding Hashicorp repo 
-  apt_repository: 
-    repo: deb https://apt.releases.hashicorp.com jammy main 
-    filename: nomad
-    state: present
+- name: Add HashiCorp repo
+  ansible.builtin.apt_repository:
+    filename: hashicorp
+    repo: 'deb [signed-by=/etc/apt/trusted.gpg.d/hashicorp.gpg.asc] https://apt.releases.hashicorp.com jammy main'
 
 - name: update repos 
   apt:
@@ -27,7 +28,7 @@
 
 - name: move systemd service files
   ansible.builtin.copy: 
-    src: ../files/consul.service
+    src: files/consul.service
     dest: /etc/systemd/system/consul.service 
     owner: root
     group: root
