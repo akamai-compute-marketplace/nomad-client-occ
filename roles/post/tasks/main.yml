@@ -3,18 +3,12 @@
 
 - name: adding sudo user
   import_tasks: sudouser.yml
-  tags: 
-    - C1
   when: cluster_mode == "client"
 
 - name: add user ssh keys
   import_tasks: sshkeys.yml
-  tags: 
-    - C1
   when: cluster_mode == "client"
 
 - name: dumping credentials locally
   import_tasks: creds.yml
-  tags: 
-    - C1
   when: cluster_mode == "client"

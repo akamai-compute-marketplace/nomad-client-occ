@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-#trap "cleanup $? $LINENO" EXIT
+trap "cleanup $? $LINENO" EXIT
 
 function cleanup {
   if [ "$?" != "0" ]; then
@@ -80,7 +80,8 @@ function ansible:build {
   sudo_username: ${SUDO_USERNAME}
   nomad_version: ${NOMAD_VERSION}
   cluster_size: ${CLUSTER_SIZE}
-  consul_nomad_autojoin_token: ${CONSUL_NOMAD_AUTOJOIN_TOKEN}
+  is_provisioner: 'true'
+  consul_nomad_autojoin_token: ${CONSUL_NOMAD_AUTOJOIN_TOKEN_PASSWORD}
   # paths
 EOF
 }
