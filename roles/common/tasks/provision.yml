@@ -20,7 +20,9 @@
       {%- for count in range(cluster_size) %}
       {{ nomad_data.client[count].instance.ip_priv1 }} {{ nomad_data.client[count].instance.hostname }}
       {%- endfor %}
-  when: cluster_mode == 'client'
+  when: 
+    - cluster_mode == 'client'
+    - is_provisioner == 'true'
 
 # allows cluster play to use correct client var
 - name: update /etc/hosts on all of the nodes
@@ -33,7 +35,9 @@
       {%- for count in range(clients) %}
       {{ nomad_data.client[count].instance.ip_priv1 }} {{ nomad_data.client[count].instance.hostname }}
       {%- endfor %}
-  when: cluster_mode != 'client'
+  when:
+    - cluster_mode == 'client'
+    - is_provisioner == 'false'
 
 - name: apt update
   apt:
@@ -53,23 +57,19 @@
     - ssl-cert
     - python3-redis
     - python3-passlib
-    - openjdk-17-jdk
     state: present
 
-- name: configure firewalld 
+- name: configure firewalld
   import_tasks: firewall.yml
 
-- name: Add Docker GPG key
-  ansible.builtin.get_url:
+- name: add docker repo key 
+  apt_key: 
     url: https://download.docker.com/linux/ubuntu/gpg
-    dest: /etc/apt/trusted.gpg.d/docker.gpg.asc
-    mode: '0644'
-    force: true
+    state: present
 
-- name: Add Docker repo
-  ansible.builtin.apt_repository:
-    filename: example-repo
-    repo: 'deb [signed-by=/etc/apt/trusted.gpg.d/docker.gpg.asc] https://download.docker.com/linux/ubuntu jammy stable'
+- name: adding docker repo 
+  apt_repository: 
+    repo: deb https://download.docker.com/linux/ubuntu jammy stable
 
 - name: install docker-ce 
   apt:
