@@ -81,7 +81,7 @@ function ansible:build {
   nomad_version: ${NOMAD_VERSION}
   cluster_size: ${CLUSTER_SIZE}
   is_provisioner: 'true'
-  consul_nomad_autojoin_token: ${CONSUL_NOMAD_AUTOJOIN_TOKEN}
+  consul_nomad_autojoin_token: ${CONSUL_NOMAD_AUTOJOIN_TOKEN_PASSWORD}
   # paths
 EOF
 }
