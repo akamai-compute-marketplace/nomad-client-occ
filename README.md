@@ -51,7 +51,7 @@ curl -H "Content-Type: application/json" \
         "clusterheader": "Yes",
         "add_ssh_keys": "yes",
         "cluster_size": "3",
-        "consul_nomad_autojoin_token": "CONSUL_NOMAD_AUTOJOIN_TOKEN",
+        "consul_nomad_autojoin_token_password": "CONSUL_NOMAD_AUTOJOIN_TOKEN",
         "token_password": "LINODE_API_TOKEN",
         "sudo_username": "sudo_user"
     },
@@ -71,8 +71,8 @@ linode-cli linodes create \
   --label nomad-occ \
   --private_ip true \
   --region us-ord \
-  --root_pass A_Really_Great_password \
-  --stackscript_data '{"clusterheader": "Yes","add_ssh_keys":"yes","cluster_size":"3",consul_nomad_autojoin_token": "CONSUL_NOMAD_AUTOJOIN_TOKEN","token_password":"LINODE_API_TOKEN","sudo_username":"user1"}' \
+  --root_pass 'A_Really_Great_password' \
+  --stackscript_data '{"clusterheader": "Yes","add_ssh_keys":"yes","cluster_size":"3","consul_nomad_autojoin_token_password":"CONSUL_NOMAD_AUTOJOIN_TOKEN","token_password":"LINODE_API_TOKEN","sudo_username":"user1"}' \
   --stackscript_id 1226545 \
   --type g6-dedicated-4
 ```
