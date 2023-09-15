@@ -14,7 +14,7 @@
   tasks:
   - name: deleting linodes except provisioner
     linode.cloud.instance:
-      label: '{{ instance_prefix }}-server-{{ item | int + 1 }}-{{ uuid }}'
+      label: '{{ instance_prefix }}-client-{{ item | int + 1 }}-{{ uuid }}'
       api_token: '{{ api_token }}'
       state: absent
     with_sequence: count='{{ count }}'
