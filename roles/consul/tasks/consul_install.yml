@@ -1,12 +1,4 @@
 ---
-
-# force failure. dbg destroy
-#- name: failing and triggering destroy
-#  fail:
-#    msg: "Force failing to trigger destroy task"
-#  run_once: true
-#  delegate_to: localhost
-
 - name: Add HashiCorp GPG key
   ansible.builtin.get_url:
     url: https://apt.releases.hashicorp.com/gpg
