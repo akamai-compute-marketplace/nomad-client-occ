@@ -20,7 +20,7 @@
       authorized_keys: '{{ ssh_keys }}'
       private_ip: true
       stackscript_id: '1226547'
-      ua_prefix: 'markeplace-nomad-client-occ'      
+      ua_prefix: 'marketplace-nomad-client-occ'      
       tags: 'consul-server'
       state: present
     with_sequence: count='{{ count }}'
