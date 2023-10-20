@@ -75,7 +75,7 @@ function tag_provisioner {
   echo "[info] tagging the provisioner"
   curl -s -H "Content-Type: application/json" \
     -H "Authorization: Bearer ${TOKEN_PASSWORD}" -X PUT \
-    -d "{\"tags\": [\"${UUID}\"]}" \
+    -d "{\"tags\": [\"${CLUSTER_UUID}\"]}" \
     https://api.linode.com/v4/linode/instances/${LINODE_ID}   
 }
 
