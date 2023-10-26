@@ -21,7 +21,7 @@
       private_ip: true
       stackscript_id: '1226547'
       ua_prefix: 'marketplace-nomad-client-occ'      
-      tags: 'consul-server'
+      tags: '{{ cluster_uuid }}'
       state: present
     with_sequence: count='{{ count }}'
 
