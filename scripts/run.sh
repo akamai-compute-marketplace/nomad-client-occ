@@ -88,8 +88,8 @@ EOF
 }
 
 function ansible:deploy {
-  ansible-playbook -vvv provision.yml
-  ansible-playbook -vvv -i hosts site.yml -vvv --extra-vars "root_password=${ROOT_PASS} add_keys_prompt=${ADD_SSH_KEYS} cluster_mode='${CLUSTER_MODE}'"
+  ansible-playbook -v provision.yml
+  ansible-playbook -i hosts site.yml -v --extra-vars "root_password=${ROOT_PASS} add_keys_prompt=${ADD_SSH_KEYS} cluster_mode='${CLUSTER_MODE}'"
 }
 
 function test:deploy {
